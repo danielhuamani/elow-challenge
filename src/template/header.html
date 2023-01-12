@@ -1,0 +1,42 @@
+{% load static %}
+<header class="header-section">
+    <div class="container">
+        <div class="header-wrapper">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="{% static 'assets/images/logo/logo.png' %}" alt="logo">
+                </a>
+            </div>
+            <ul class="menu">
+                <li>
+                    <a href="{% url 'security:home' %}" class="">Home</a>
+                </li>
+                {% if not request.user.is_authenticated %}
+                <li>
+                    <a href="{% url 'users:login' %}" class="">Ingresar</a>
+                </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                <li>
+                    <a href="#0">Hola {{request.user.first_name}} </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{% url 'users:my_tickets' %}">Mis entradas</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'users:logout_view' %}">Salir</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+                
+
+            </ul>
+            <div class="header-bar d-lg-none">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</header>

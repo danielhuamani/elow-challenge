@@ -1,0 +1,62 @@
+{% extends './base_auth.html' %}
+{% load static %}
+    <!-- ==========Banner-Section========== -->
+
+{% block content %}
+
+<!-- ==========Preloader========== -->
+
+<!-- ==========Sign-In-Section========== -->
+<section class="account-section bg_img" data-background="{% static 'assets/images/account/account-bg.jpg' %}">
+    <div class="container">
+        <div class="padding-top padding-bottom">
+            <div class="account-area">
+                
+                <div class="section-header-3">
+                    <span class="cate">Hola</span>
+                    <h2 class="title">Bienvenido</h2>
+                   
+                </div>
+                <div class="item md-order-1 text-center mb-3">
+                    <a href="{% url 'events:events' %}" class="back-button text-white" >
+                        Ir al home
+                    </a>
+                </div>
+                <form class="account-form" method="POST" action="">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{field.label}}
+                            {{field}}
+                            
+                            {% if field.help_text %}
+                                <p class="mt-1">
+                                    {{field.help_text}}
+                                </p>
+                            {% endif %}
+                            <p class="text-danger">
+                            {% for error in field.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <div class="non-field-errors">
+                        {% for err in form.non_field_errors %}
+                        <p class="text-danger">{{ err }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="form-group text-center">
+                        <input type="submit" value="Registrar">
+                    </div>
+                </form>
+                <div class="option mt-2">
+                    Ya tienes una cuenta? <a href="{% url 'users:login' %}">Ingresa </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

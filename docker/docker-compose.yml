@@ -1,0 +1,25 @@
+version: '3'
+services:
+  elow:
+    build:
+        context: ../
+        dockerfile: docker/Dockerfile
+    restart: always
+    env_file:
+        - ./.env
+    entrypoint: ../entrypoint.sh
+    volumes:
+        - ../src:/www/src
+    ports:
+        - "8000:8000"
+    depends_on:
+        - elow_db
+  elow_db:
+    image: "postgres:14"
+    restart: unless-stopped
+    env_file:
+        - ./.env
+    ports:
+        - "5436:5432"
+    volumes:
+        - ../postgres/data:/var/lib/postgresql/data
