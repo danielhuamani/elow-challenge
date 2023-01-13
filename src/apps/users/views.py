@@ -52,8 +52,10 @@ class MyTicketView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy("events:events")
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user).select_related(
-            "event"
+        return (
+            Order.objects.filter(user=self.request.user)
+            .select_related("event")
+            .order_by("-created_at")
         )
 
     def get_context_data(self, **kwargs):

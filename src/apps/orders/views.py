@@ -23,7 +23,7 @@ class OrderView(TemplateView):
             return redirect("events:events")
         event = get_object_or_404(Events, id=request.session.get("event_id"))
         tickets = request.session.get("tickets")
-        if not (event.total_tickets() > tickets):
+        if not (event.total_tickets() > int(tickets)):
             messages.success(
                 self.request,
                 "En estos momentos no contamos con los tickets que solicita",
@@ -78,7 +78,7 @@ class OrderView(TemplateView):
             extra=0,
         )
         orderInlineForm = OrderUsersInlineForm(request.POST, instance=Order())
-        if not (event.total_tickets() > tickets):
+        if not (event.total_tickets() > int(tickets)):
             messages.success(
                 self.request,
                 "En estos momentos no contamos con los tickets que solicita",
@@ -89,7 +89,7 @@ class OrderView(TemplateView):
             orderInlineForm.instance = instance
             orderInlineForm.save()
             request.session["order_id"] = instance.id
-            return redirect(reverse("order:thanks"))
+            return redirect(reverse("orders:thanks"))
         else:
             context["event"] = event
             context["tickets"] = tickets

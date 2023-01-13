@@ -28,7 +28,7 @@ class OrderUsers(models.Model):
     order = models.ForeignKey(
         "Order", related_name="order_users", on_delete=models.CASCADE
     )
-    email = models.EmailField("Email", unique=True)
+    email = models.EmailField("Email")
     first_name = models.CharField("Nombres", max_length=120)
     last_name = models.CharField("Apellidos", max_length=120)
     document = models.CharField("Documento", max_length=255)
