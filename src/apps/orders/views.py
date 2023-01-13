@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib import messages
 from django.views.generic import TemplateView
 from apps.events.models import Events
 from django.forms.models import inlineformset_factory
@@ -15,11 +16,19 @@ class OrderView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         if not Events.objects.filter(
-            id=request.session.get("event_id"), is_delete=False
+            id=request.session.get("event_id"),
+            is_delete=False,
+            is_published=True,
         ).exists():
             return redirect("events:events")
         event = get_object_or_404(Events, id=request.session.get("event_id"))
         tickets = request.session.get("tickets")
+        if not (event.total_tickets() > tickets):
+            messages.success(
+                self.request,
+                "En estos momentos no contamos con los tickets que solicita",
+            )
+            return redirect("events:events")
         OrderUsersInlineForm = inlineformset_factory(
             Order,
             OrderUsers,
@@ -69,6 +78,12 @@ class OrderView(TemplateView):
             extra=0,
         )
         orderInlineForm = OrderUsersInlineForm(request.POST, instance=Order())
+        if not (event.total_tickets() > tickets):
+            messages.success(
+                self.request,
+                "En estos momentos no contamos con los tickets que solicita",
+            )
+            return redirect("events:events")
         if orderInlineForm.is_valid() and form.is_valid():
             instance = form.save()
             orderInlineForm.instance = instance

@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from .models import Events
@@ -7,24 +8,25 @@ from .models import Events
 
 class EventsView(ListView):
     model = Events
-    queryset = Events.objects.all()
+    queryset = Events.objects.filter(is_published=True, is_delete=False)
     template_name = "home.html"
 
 
 class EventDetailView(DetailView):
     model = Events
-    queryset = Events.objects.all()
+    queryset = Events.objects.filter(is_published=True, is_delete=False)
     template_name = "event_detail.html"
     slug_field = "url"
     slug_url_kwarg = "url"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        max_tickets = (
-            self.get_object().num_tickets
-            if self.get_object().num_tickets < 5
-            else 5
+
+        allowed_tickets = (
+            self.get_object().num_tickets - self.get_object().total_tickets()
         )
+        max_tickets = allowed_tickets if allowed_tickets < 5 else 5
+        context["total_tickets"] = max_tickets
         max_tickets = range(1, max_tickets + 1)
         context["max_tickets"] = max_tickets
         return context

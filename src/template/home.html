@@ -27,7 +27,7 @@
                 <div class="col-lg-6 mb-20">
                     <div class="search-ticket-header">
                         <h6 class="category">Bienvenido</h6>
-                        <h3 class="title">Que estas buscando</h3>
+                        <h3 class="title">Que estas buscando?</h3>
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
             <div class="col-lg-12">
                 <div class="article-section padding-bottom">
                     <div class="section-header-1">
-                        <h2 class="title">events</h2>
+                        <h2 class="title">eventos</h2>
                     </div>
                     <div class="row mb-30-none justify-content-center">
                         {% for obj in object_list %}
@@ -178,6 +178,8 @@
                                 </div>
                             </div>
                         </div>
+                        {% empty %}
+                            <h5>En estos momentos no contamos con eventos disponibles</h5>
                         {% endfor %}
                     </div>
                 </div>

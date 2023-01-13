@@ -1,12 +1,12 @@
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import (
-    TemplateView,
     FormView,
     CreateView,
     ListView,
     DetailView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm  # add this
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.messages.views import SuccessMessageMixin
@@ -46,9 +46,10 @@ def logout_view(request):
     return redirect("events:events")
 
 
-class MyTicketView(ListView):
+class MyTicketView(LoginRequiredMixin, ListView):
     model = Order
     template_name = "my-tickets.html"
+    login_url = reverse_lazy("events:events")
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).select_related(
@@ -61,9 +62,10 @@ class MyTicketView(ListView):
         return context
 
 
-class MyTickeDetailView(DetailView):
+class MyTickeDetailView(LoginRequiredMixin, DetailView):
     model = Order
     template_name = "my-tickets-detail.html"
+    login_url = reverse_lazy("events:events")
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
